@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      enabled:
+        false
+  cassandra:
+    keyspace-name: "urlStorage"
+    contact-points: "localhost:9042"
+    local-datacenter: "datacenter1"
