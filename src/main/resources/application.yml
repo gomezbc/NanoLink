@@ -4,6 +4,9 @@ spring:
       enabled:
         false
   cassandra:
-    keyspace-name: "urlStorage"
-    contact-points: "localhost:9042"
-    local-datacenter: "datacenter1"
+    port: 9042
+    keyspace-name: mykeyspace
+    contact-points: mycassandra
+    schema-action: create_if_not_exists
+
+
