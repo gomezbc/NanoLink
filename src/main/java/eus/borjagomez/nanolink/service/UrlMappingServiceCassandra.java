@@ -1,6 +1,7 @@
 package eus.borjagomez.nanolink.service;
 
 import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
+import eus.borjagomez.nanolink.exception.UrlMappingNotFoundException;
 import eus.borjagomez.nanolink.mapper.UrlMappingMapper;
 import eus.borjagomez.nanolink.model.UrlMapping;
 import eus.borjagomez.nanolink.repository.UrlMappingRepository;
@@ -24,7 +25,7 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(urlMapping.getMappingId());
         if (optionalUrlMapping.isPresent()) {
             System.err.println("Mapping already exists " + optionalUrlMapping.get());
-            throw new RuntimeException("Mapping already exists");
+            throw new UrlMappingNotFoundException("Mapping already exists");
         }
         urlMappingRepository.save(urlMapping);
     }
@@ -34,7 +35,7 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
             System.err.println("Mapping doesn't exists " + mappingId);
-            throw new RuntimeException("Mapping doesn't exist");
+            throw new UrlMappingNotFoundException("Mapping doesn't exist");
         }
         final UrlMapping urlMapping = optionalUrlMapping.get();
         updateHitCount(urlMapping);
