@@ -1,6 +1,7 @@
 package eus.borjagomez.nanolink.service;
 
 import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
+import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
 import eus.borjagomez.nanolink.exception.UrlMappingNotFoundException;
 import eus.borjagomez.nanolink.mapper.UrlMappingMapper;
 import eus.borjagomez.nanolink.model.UrlMapping;
@@ -24,23 +25,40 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
         UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(createUrlMappingDto, new UrlMapping());
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(urlMapping.getMappingId());
         if (optionalUrlMapping.isPresent()) {
-            System.err.println("Mapping already exists " + optionalUrlMapping.get());
             throw new UrlMappingNotFoundException("Mapping already exists");
         }
-        urlMappingRepository.save(urlMapping);
+        urlMappingRepository.insert(urlMapping);
     }
 
     @Override
     public URI getLongUri(String mappingId) {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
-            System.err.println("Mapping doesn't exists " + mappingId);
             throw new UrlMappingNotFoundException("Mapping doesn't exist");
         }
         final UrlMapping urlMapping = optionalUrlMapping.get();
         updateHitCount(urlMapping);
         updateLastHitDate(urlMapping);
         return URI.create(urlMapping.getLongUrl());
+    }
+
+    @Override
+    public void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto) {
+        Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(updateUrlMappingDto.getMappingId());
+        if (optionalUrlMapping.isEmpty()) {
+            throw new UrlMappingNotFoundException("Mapping doesn't exist");
+        }
+        UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(updateUrlMappingDto, optionalUrlMapping.get());
+        urlMappingRepository.save(urlMapping);
+    }
+
+    @Override
+    public void deleteUrlMapping(String mappingId) {
+        Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
+        if (optionalUrlMapping.isEmpty()) {
+            throw new UrlMappingNotFoundException("Mapping doesn't exist");
+        }
+        urlMappingRepository.deleteById(mappingId);
     }
 
     @Override
