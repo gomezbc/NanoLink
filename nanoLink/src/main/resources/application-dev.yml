@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "nanoLink"
+  cloud:
+    config:
+      enabled:
+        false
+  cassandra:
+    port: 9042
+    keyspace-name: nanoLink_keyspace
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    local-datacenter: datacenter1
+    contact-points: localhost
+    schema-action: create_if_not_exists

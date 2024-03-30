@@ -1,16 +1,11 @@
 server:
   port: 8080
 spring:
+  profiles:
+    active: dev
   application:
     name: "nanoLink"
   cloud:
     config:
       enabled:
         false
-  cassandra:
-    port: 9042
-    keyspace-name: mykeyspace
-    contact-points: mycassandra
-    schema-action: create_if_not_exists
-
-
