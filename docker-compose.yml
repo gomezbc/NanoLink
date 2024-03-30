@@ -1,7 +1,48 @@
 version: '3.1'
 services:
-  mycassandra:
+  cassandra-service:
     image: cassandra:3.11
-    container_name: mycassandra
+    container_name: cassandra
+    networks:
+      - nano-link-network
+    environment:
+      CASSANDRA_KEYSPACE: nanoLink_keyspace
     ports:
       - "9042:9042"
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nanoLink:
+    image: gomezbc/nano-link:0.0.1-SNAPSHOT
+    container_name: nanoLink
+    networks:
+      - nano-link-network
+    ports:
+      - "8080:8080"
+    depends_on:
+      cassandra-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+    environment:
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: nanoLink_keyspace
+      SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT: 10s
+      SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT: 10s
+      SPRING_CASSANDRA_USERNAME: cassandra
+      SPRING_CASSANDRA_PASSWORD: cassandra
+      SPRING_CASSANDRA_CONTACT-POINTS: cassandra
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+      DEBUG: "true"
+
+networks:
+  nano-link-network:
+    driver: bridge
+
+volumes:
+  cassandra_data:
+    driver: local
+
