@@ -2,6 +2,7 @@ package eus.borjagomez.nanolink.service;
 
 import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
 import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
+import eus.borjagomez.nanolink.exception.UrlMappingAlreadyExistsException;
 import eus.borjagomez.nanolink.exception.UrlMappingNotFoundException;
 import eus.borjagomez.nanolink.mapper.UrlMappingMapper;
 import eus.borjagomez.nanolink.model.UrlMapping;
@@ -21,11 +22,12 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
         this.urlMappingRepository = urlMappingRepository;
     }
 
+    @Override
     public void createUrlMapping(CreateUrlMappingDto createUrlMappingDto) {
         UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(createUrlMappingDto, new UrlMapping());
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(urlMapping.getMappingId());
         if (optionalUrlMapping.isPresent()) {
-            throw new UrlMappingNotFoundException("Mapping already exists");
+            throw new UrlMappingAlreadyExistsException("Mapping already exists");
         }
         urlMappingRepository.insert(urlMapping);
     }
