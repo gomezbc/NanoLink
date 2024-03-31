@@ -1,6 +1,9 @@
 package eus.borjagomez.nanolink.exception;
 
 import eus.borjagomez.nanolink.dto.ErrorResponseDto;
+import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,9 +25,11 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, @Nullable HttpHeaders headers, @Nullable HttpStatusCode status, @Nullable WebRequest request) {
+            MethodArgumentNotValidException ex, @Nullable HttpHeaders headers, @Nullable HttpStatusCode status, @NotNull WebRequest request) {
         Map<String, String> validationErrors = new HashMap<>();
         List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
@@ -33,6 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String validationMsg = error.getDefaultMessage();
             validationErrors.put(fieldName, validationMsg);
         });
+        logger.error("Validation error processing request: " + request.getDescription(false) + ", message: " + ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
@@ -48,6 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
+        logger.error("Error processing request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
@@ -63,6 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
+        logger.error("Error processing request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
