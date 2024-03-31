@@ -1,0 +1,18 @@
+{{- define "common.configmap" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.configMapName }}
+data:
+  SPRING_CASSANDRA_PORT: {{ .Values.global.cassandraPort }}
+  SPRING_CASSANDRA_KEYSPACE_NAME: {{ .Values.global.cassandraKeyspace }}
+  SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT: {{ .Values.global.cassandraConneectionConnectTimeout }}
+  SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT: {{ .Values.global.cassandraConneectionInitQueryTimeout }}
+  SPRING_CASSANDRA_USERNAME: {{ .Values.global.cassandraUsername }}
+  SPRING_CASSANDRA_PASSWORD: {{ .Values.global.cassandraPassword }}
+  SPRING_CASSANDRA_CONTACT-POINTS: {{ .Values.global.cassandraContactPoints }}
+  SPRING_CASSANDRA_LOCAL_DATACENTER: {{ .Values.global.cassandraLocalDatacenter }}
+  SPRING.CLOUD.KUBERNETES.DISCOVERY-SERVER-URL: {{ .Values.global.cloudKubernetesDiscoveryServerURL }}
+  SPRING_CLOUD_KUBERNETES_DISCOVERY_ENABLED: {{ .Values.global.cloudKubernetesDiscoveyEnabled }}
+  SPRING_CLOUD_KUBERNETES_DISCOVERY_ALL-NAMESPACES: {{ .Values.global.cloudKubernetesDiscoveyAllNamespaces }}
+{{- end -}}

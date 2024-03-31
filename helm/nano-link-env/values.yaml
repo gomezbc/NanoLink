@@ -1,0 +1,101 @@
+# Default values for nano-link.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+deploymentName: nano-link
+appLabel: nano-link-microservice
+appName: nanoLink
+
+image:
+  repository: gomezbc/nano-link
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  port: 8080
+  targetPort: 9000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+cassandra_enabled: true
+appname_enabled: true
+profile_enabled: true
+discovery_enabled: true
+
+global:
+  configMapName: nano-link-dev-configmap
+  activeProfile: dev
+  cassandraPort: 9042
+  cassandraKeyspace: nanolink_keyspace
+  cassandraConneectionConnectTimeout: 10s
+  cassandraConneectionInitQueryTimeout: 10s
+  cassandraUsername: cassandra
+  cassandraPassword: t3n7I4YtUS
+  cassandraContactPoints: cassandra.default.svc.cluster.local
+  cassandraLocalDatacenter: datacenter1
+  cloudKubernetesDiscoveryServerURL: "http://spring-cloud-kubernetes-discoveryserver:80/"
+  cloudKubernetesDiscoveyEnabled: "true"
+  cloudKubernetesDiscoveyAllNamespaces: "true"

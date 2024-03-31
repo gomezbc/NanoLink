@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deploymentName }}
+  labels:
+    app: {{ .Values.appLabel }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appLabel }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ .Values.appLabel }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- if .Values.appname_enabled }}
+            - name: SPRING_APPLICATION_NAME
+              value: {{ .Values.appName }}
+            {{- end }}
+            {{- if .Values.profile_enabled }}
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_PROFILES_ACTIVE
+            {{- end }}
+            {{- if .Values.cassandra_enabled }}
+            - name: SPRING_CASSANDRA_PORT
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_PORT
+            - name: SPRING_CASSANDRA_KEYSPACE_NAME
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_KEYSPACE_NAME
+            - name: SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT
+            - name: SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT
+            - name: SPRING_CASSANDRA_USERNAME
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_USERNAME
+            - name: SPRING_CASSANDRA_PASSWORD
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_PASSWORD
+            - name: SPRING_CASSANDRA_CONTACT-POINTS
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_CONTACT-POINTS
+            - name: SPRING_CASSANDRA_LOCAL_DATACENTER
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CASSANDRA_LOCAL_DATACENTER
+            {{- end }}
+            {{- if .Values.discovery_enabled }}
+            - name: SPRING.CLOUD.KUBERNETES.DISCOVERY-SERVER-URL
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING.CLOUD.KUBERNETES.DISCOVERY-SERVER-URL
+            - name: SPRING_CLOUD_KUBERNETES_DISCOVERY_ENABLED
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CLOUD_KUBERNETES_DISCOVERY_ENABLED
+            - name: SPRING_CLOUD_KUBERNETES_DISCOVERY_ALL-NAMESPACES
+              valueFrom: 
+                configMapKeyRef:
+                  name: {{ .Values.global.configMapName }}
+                  key: SPRING_CLOUD_KUBERNETES_DISCOVERY_ALL-NAMESPACES
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
