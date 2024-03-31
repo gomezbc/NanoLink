@@ -6,9 +6,13 @@ spring:
   application:
     name: "nanoLink"
   cloud:
-    config:
-      enabled:
-        false
+    kubernetes:
+      discovery:
+        all-namespaces: true
+    discovery:
+      client:
+        health-indicator:
+          enabled: false
 
 
 management:
