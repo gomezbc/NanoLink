@@ -20,7 +20,7 @@ public class UrlMappingController {
         this.urlMappingService = urlMappingService;
     }
 
-    @PostMapping("/api/shorten")
+    @PostMapping(value = "/api/shorten", consumes = "application/json", produces = {"application/json","application/problem+json"})
     public ResponseEntity<ResponseDto> createUrlMapping(@Valid @RequestBody CreateUrlMappingDto createUrlMappingDto) {
         urlMappingService.createUrlMapping(createUrlMappingDto);
         return ResponseEntity
@@ -28,7 +28,7 @@ public class UrlMappingController {
                 .body(new ResponseDto(UrlMappingConstants.STATUS_201, UrlMappingConstants.MESSAGE_201));
     }
 
-    @GetMapping("/api/{mappingId}")
+    @GetMapping(value = "/api/{mappingId}", produces = {"application/json","application/problem+json"})
     public ResponseEntity<Object> redirectToLongUrl(@PathVariable String mappingId) {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
@@ -36,7 +36,7 @@ public class UrlMappingController {
                 .build();
     }
 
-    @PutMapping("/api/{mappingId}")
+    @PutMapping(value = "/api/{mappingId}", consumes = "application/json", produces = {"application/json","application/problem+json"})
     public ResponseEntity<ResponseDto> updateUrlMapping(@Valid @RequestBody UpdateUrlMappingDto updateUrlMappingDto) {
         urlMappingService.updateUrlMapping(updateUrlMappingDto);
         return ResponseEntity
@@ -44,7 +44,7 @@ public class UrlMappingController {
                 .body(new ResponseDto(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_UPDATE));
     }
 
-    @DeleteMapping("/api/{mappingId}")
+    @DeleteMapping(value = "/api/{mappingId}", produces = {"application/json","application/problem+json"})
     public ResponseEntity<ResponseDto> deleteUrlMapping(@PathVariable String mappingId) {
         urlMappingService.deleteUrlMapping(mappingId);
         return ResponseEntity
