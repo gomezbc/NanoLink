@@ -12,7 +12,7 @@ public interface IUrlMappingService {
 
     URI getLongUri(String mappingId);
 
-    void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto);
+    void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto, String mappingId);
 
     void deleteUrlMapping(String mappingId);
 

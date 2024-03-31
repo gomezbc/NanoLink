@@ -14,9 +14,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UpdateUrlMappingDto {
 
-    @NotNull
-    @Size(min = 1, max = 2048)
-    private String mappingId;
     @Size(min = 1, max = 2048)
     private String longUrl;
     private Timestamp expiryDate;

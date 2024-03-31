@@ -43,8 +43,8 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
     }
 
     @Override
-    public void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto) {
-        Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(updateUrlMappingDto.getMappingId());
+    public void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto, String mappingId) {
+        Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
             throw new UrlMappingNotFoundException("Mapping doesn't exist");
         }

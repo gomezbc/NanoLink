@@ -37,8 +37,8 @@ public class UrlMappingController {
     }
 
     @PutMapping(value = "/api/{mappingId}", consumes = "application/json", produces = {"application/json","application/problem+json"})
-    public ResponseEntity<ResponseDto> updateUrlMapping(@Valid @RequestBody UpdateUrlMappingDto updateUrlMappingDto) {
-        urlMappingService.updateUrlMapping(updateUrlMappingDto);
+    public ResponseEntity<ResponseDto> updateUrlMapping(@Valid @RequestBody UpdateUrlMappingDto updateUrlMappingDto, @PathVariable String mappingId) {
+        urlMappingService.updateUrlMapping(updateUrlMappingDto, mappingId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseDto(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_UPDATE));

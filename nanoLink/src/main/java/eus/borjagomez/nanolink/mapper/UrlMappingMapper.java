@@ -31,7 +31,6 @@ public class UrlMappingMapper {
     }
 
     public static UrlMapping mapToUrlMapping(UpdateUrlMappingDto updateUrlMappingDto, UrlMapping urlMapping) {
-        urlMapping.setMappingId(updateUrlMappingDto.getMappingId());
         final String newLongUrl = updateUrlMappingDto.getLongUrl();
         if (newLongUrl != null && !newLongUrl.isEmpty()){
             urlMapping.setLongUrl(newLongUrl);
