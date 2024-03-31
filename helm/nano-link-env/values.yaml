@@ -93,7 +93,7 @@ global:
   cassandraConneectionConnectTimeout: 10s
   cassandraConneectionInitQueryTimeout: 10s
   cassandraUsername: cassandra
-  cassandraPassword: t3n7I4YtUS
+  cassandraPassword: cassandra
   cassandraContactPoints: cassandra.default.svc.cluster.local
   cassandraLocalDatacenter: datacenter1
   cloudKubernetesDiscoveryServerURL: "http://spring-cloud-kubernetes-discoveryserver:80/"

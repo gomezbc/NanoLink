@@ -31,16 +31,22 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
     private final String contactPoints;
     private final int port;
     private final String localDatacenter;
+    private final String username;
+    private final String password;
 
     CassandraSessionConfig(
             @Value("${spring.cassandra.keyspace-name}") String keyspace,
             @Value("${spring.cassandra.contact-points}") String contactPoints,
             @Value("${spring.cassandra.port}") int port,
-            @Value("${spring.cassandra.local-datacenter}") String localDatacenter) {
+            @Value("${spring.cassandra.local-datacenter}") String localDatacenter,
+            @Value("${spring.cassandra.username}") String username,
+            @Value("${spring.cassandra.password}") String password){
         this.keyspace = keyspace;
         this.contactPoints = contactPoints;
         this.port = port;
         this.localDatacenter = localDatacenter;
+        this.username = username;
+        this.password = password;
         log.info("CassandraSessionConfig created with keyspace: {}, contactPoints: {}, port: {}, localDatacenter: {}",
                 keyspace, contactPoints, port, localDatacenter);
     }
@@ -120,6 +126,8 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
         CqlSessionFactoryBean bean = new CqlSessionFactoryBean();
 
         bean.setContactPoints(contactPoints);
+        bean.setUsername(username);
+        bean.setPassword(password);
         bean.setKeyspaceCreations(getKeyspaceCreations());
         bean.setKeyspaceDrops(getKeyspaceDrops());
         bean.setKeyspaceName(keyspace);

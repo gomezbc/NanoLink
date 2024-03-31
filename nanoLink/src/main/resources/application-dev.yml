@@ -16,3 +16,5 @@ spring:
     local-datacenter: datacenter1
     contact-points: localhost
     schema-action: create_if_not_exists
+    username: cassandra
+    password: cassandra
