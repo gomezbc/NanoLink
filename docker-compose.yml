@@ -29,7 +29,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
     environment:
       SPRING_CASSANDRA_PORT: 9042
-      SPRING_CASSANDRA_KEYSPACE_NAME: nanoLink_keyspace
+      SPRING_CASSANDRA_KEYSPACE_NAME: nanolink_keyspace
       SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT: 10s
       SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT: 10s
       SPRING_CASSANDRA_USERNAME: cassandra

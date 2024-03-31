@@ -3,6 +3,7 @@ package eus.borjagomez.nanolink.config;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.loadbalancing.LoadBalancingPolicy;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +17,15 @@ import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecif
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
 import org.springframework.data.cassandra.core.cql.session.init.ResourceKeyspacePopulator;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+import org.springframework.lang.NonNull;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 
 @Configuration
 @EnableCassandraRepositories
 public class CassandraSessionConfig extends AbstractSessionConfiguration {
+
+    private final static Logger log = org.slf4j.LoggerFactory.getLogger(CassandraSessionConfig.class);
 
     private final String keyspace;
     private final String contactPoints;
@@ -38,6 +41,8 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
         this.contactPoints = contactPoints;
         this.port = port;
         this.localDatacenter = localDatacenter;
+        log.info("CassandraSessionConfig created with keyspace: {}, contactPoints: {}, port: {}, localDatacenter: {}",
+                keyspace, contactPoints, port, localDatacenter);
     }
 
     /**
@@ -46,7 +51,7 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
      * @return must not be {@literal null}.
      */
     @Override
-    protected String getKeyspaceName() {
+    protected @NonNull String getKeyspaceName() {
         return keyspace;
     }
 
@@ -80,7 +85,7 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
      */
     @Override
     @NotNull
-    protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+    protected @NonNull List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         final CreateKeyspaceSpecification specification =
                 CreateKeyspaceSpecification.createKeyspace(keyspace)
                         .ifNotExists()
@@ -103,6 +108,26 @@ public class CassandraSessionConfig extends AbstractSessionConfiguration {
         Binder binder = Binder.get(environment);
         binder.bind("spring.cassandra.schema-action", SchemaAction.class).ifBound(session::setSchemaAction);
         return session;
+    }
+
+    @Bean
+    @Override
+    // Overriding the default method to ensure that the CqlSessionFactoryBean is created with the correct configuration
+    public @NonNull CqlSessionFactoryBean cassandraSession() {
+        log.info("Creating CqlSessionFactoryBean with contactPoints: {}, keyspace: {}, port: {}, localDatacenter: {}",
+                contactPoints, keyspace, port, localDatacenter);
+
+        CqlSessionFactoryBean bean = new CqlSessionFactoryBean();
+
+        bean.setContactPoints(contactPoints);
+        bean.setKeyspaceCreations(getKeyspaceCreations());
+        bean.setKeyspaceDrops(getKeyspaceDrops());
+        bean.setKeyspaceName(keyspace);
+        bean.setLocalDatacenter(localDatacenter);
+        bean.setPort(port);
+        bean.setSessionBuilderConfigurer(super.getSessionBuilderConfigurer());
+
+        return bean;
     }
 
 }
