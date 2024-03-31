@@ -9,7 +9,7 @@ spring:
         false
   cassandra:
     port: 9042
-    keyspace-name: nanoLink_keyspace
+    keyspace-name: nanolink_keyspace
     connection:
       connect-timeout: 10s
       init-query-timeout: 10s
