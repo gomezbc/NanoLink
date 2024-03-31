@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String validationMsg = error.getDefaultMessage();
             validationErrors.put(fieldName, validationMsg);
         });
-        logger.error("Validation error processing request: " + request.getDescription(false) + ", message: " + ex.getMessage());
+        logger.info("Bad Request: " + request.getDescription(false) + ", message: " + ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.error("Error processing request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.error("INTERNAL_SERVER_ERROR: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
@@ -70,7 +71,39 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.error("Error processing request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .body(errorResponseDTO);
+    }
+
+    @ExceptionHandler(UrlMappingAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> handleUrlMappingAlreadyExistsException(UrlMappingAlreadyExistsException exception,
+                                                                              WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .body(errorResponseDTO);
+    }
+
+    @ExceptionHandler(MalformedURLException.class)
+    public ResponseEntity<ErrorResponseDto> handleMalformedURLException(MalformedURLException exception,
+                                                                      WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
