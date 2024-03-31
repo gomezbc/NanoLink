@@ -65,6 +65,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <mainClass>${project.groupId}.${project.artifactId}.NanoLinkApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
