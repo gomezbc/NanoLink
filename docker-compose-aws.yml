@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+
+  nanoLink:
+    image: gomezbc/nano-link:aws
+    container_name: nanoLink
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+    environment:
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: nanolink_keyspace
+      SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT: 10s
+      SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT: 10s
+      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY

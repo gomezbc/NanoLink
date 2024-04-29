@@ -87,6 +87,12 @@ COPY --from=extract build/target/extracted/spring-boot-loader/ ./
 COPY --from=extract build/target/extracted/snapshot-dependencies/ ./
 COPY --from=extract build/target/extracted/application/ ./
 
+# Add the truststore to the container
+COPY /src/main/resources/cassandra_truststore.jks /src/main/resources/cassandra_truststore.jks
+
+# Add the application's properties to the container
+COPY src/main/resources/keyspaces-application.conf /src/main/resources/keyspaces-application.conf
+
 EXPOSE 8080
 
 ENTRYPOINT [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
