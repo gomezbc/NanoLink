@@ -75,7 +75,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <mainClass>eus.borjagomez.NanoLinkApplication</mainClass>
+                    <mainClass>eus.borjagomez.nanolink.NanoLinkApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
