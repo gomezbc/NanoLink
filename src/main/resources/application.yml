@@ -13,6 +13,8 @@ spring:
       client:
         health-indicator:
           enabled: false
+  cassandra:
+    config: "application.conf"
 
 
 management:
