@@ -1,5 +1,5 @@
-# NanoLink
-NanoLink is a powerful URL management application built using Spring Boot, Cassandra, AWS, and Docker. This versatile tool allows users to create, store, and manage custom URL mappings efficiently. Think of it as a modern-day URL shortener with robust features.
+# NanoLink 🔗⚡
+NanoLink is a powerful URL management application built using Spring Boot 🍃, Cassandra, AWS, and Docker 🐳. This versatile tool allows users to create, store, and manage custom URL mappings efficiently. Think of it as a modern-day URL shortener with robust features.
 
 Key Features:
 
@@ -8,9 +8,23 @@ Key Features:
 - **Database** Integration: NanoLink stores URL mappings in a **Cassandra** database, ensuring scalability and fault tolerance.
 - **Flexible** Database Options: Users can choose between a managed database or Amazon Keyspaces (a fully managed Cassandra-compatible service) for storing URL mappings.
 - **Scalability and Fault Tolerance**: By leveraging **Amazon Keyspaces**, NanoLink ensures scalability and high availability, even during traffic spikes.
-- **Containerization**: The entire application is packaged into a **Docker** container, simplifying deployment and maintenance.
+- **Containerization** : The entire application is packaged into a **Docker** container, simplifying deployment and maintenance.
 
 Whether you’re sharing links on social media, tracking campaign performance, or simplifying complex URLs, NanoLink streamlines the process. Give it a try and experience the efficiency of concise, user-friendly links! 🚀
+
+## Getting started
+### Clone the repo
+```bash
+git clone https://github.com/gomezbc/NanoLink.git
+```
+
+### Run the application
+#### Docker 🐳
+The docker compose file will create and configure a Cassandra container to connect to the application. Feel free to modify any value.
+```bash
+docker build -t nano-link:latest -f ./Dockerfile .
+docker compose -f docker-compose.yml up -d
+```
 
 ## Getting started with AWS
 ### Clone the repo
@@ -26,7 +40,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
-#### Docker
+#### Docker 🐳
 In `docker-compose-aws.yml` file update `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with your credential
 ```docker
 AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
@@ -65,7 +79,7 @@ advanced.ssl-engine-factory {
 ```
 
 ### Run the application
-#### Docker
+#### Docker 🐳
 ```bash
 docker build -t nano-link:aws -f ./Dockerfile-AWS .
 docker compose -f docker-compose-aws.yml -p nanolink up -d nanoLink
