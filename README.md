@@ -1,3 +1,17 @@
+# NanoLink
+NanoLink is a powerful URL management application built using Spring Boot, Cassandra, AWS, and Docker. This versatile tool allows users to create, store, and manage custom URL mappings efficiently. Think of it as a modern-day URL shortener with robust features.
+
+Key Features:
+
+- **URL Mapping**: NanoLink enables users to associate long URLs with shorter, more manageable aliases.
+- **REST API**: The provided **REST API** offers seamless CRUD (Create, Read, Update, Delete) operations for managing these mappings.
+- **Database** Integration: NanoLink stores URL mappings in a **Cassandra** database, ensuring scalability and fault tolerance.
+- **Flexible** Database Options: Users can choose between a managed database or Amazon Keyspaces (a fully managed Cassandra-compatible service) for storing URL mappings.
+- **Scalability and Fault Tolerance**: By leveraging **Amazon Keyspaces**, NanoLink ensures scalability and high availability, even during traffic spikes.
+- **Containerization**: The entire application is packaged into a **Docker** container, simplifying deployment and maintenance.
+
+Whether you’re sharing links on social media, tracking campaign performance, or simplifying complex URLs, NanoLink streamlines the process. Give it a try and experience the efficiency of concise, user-friendly links! 🚀
+
 ## Getting started with AWS
 ### Clone the repo
 ```bash
