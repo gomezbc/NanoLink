@@ -1,8 +1,6 @@
 server:
   port: 8080
 spring:
-  profiles:
-    active: aws
   application:
     name: "nanoLink"
   cloud:

@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   nanoLink:
-    image: gomezbc/nano-link:aws
+    image: nano-link:aws
     container_name: nanoLink
     ports:
       - "8080:8080"
