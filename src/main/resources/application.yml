@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   profiles:
-    active: dev
+    active: aws
   application:
     name: "nanoLink"
   cloud:
@@ -14,7 +14,9 @@ spring:
         health-indicator:
           enabled: false
   cassandra:
-    config: "application.conf"
+    config: "keyspaces-application.conf"
+    keyspace-name: "aws"
+    schema-action: NONE
 
 
 management:
