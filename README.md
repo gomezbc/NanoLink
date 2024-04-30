@@ -12,13 +12,32 @@ Key Features:
 
 Whether you’re sharing links on social media, tracking campaign performance, or simplifying complex URLs, NanoLink streamlines the process. Give it a try and experience the efficiency of concise, user-friendly links! 🚀
 
-## Getting started
+## Getting started with Managed Database
 ### Clone the repo
 ```bash
 git clone https://github.com/gomezbc/NanoLink.git
 ```
+### Configure Cassandra connection
+Add the following ENV variables to your OS.
+```bash
+export SPRING_CASSANDRA_PORT=9042
+export SPRING_CASSANDRA_KEYSPACE_NAME=nanolink_keyspace
+export SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT=10s
+export SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT=10s
+export SPRING_CASSANDRA_USERNAME=cassandra
+export SPRING_CASSANDRA_PASSWORD=cassandra
+export SPRING_CASSANDRA_CONTACT-POINTS=cassandra
+export SPRING_CASSANDRA_LOCAL_DATACENTER=datacenter1
+```
 
 ### Run the application
+#### Maven
+Build the application with Maven
+```bash
+mvn clean install
+mvn compile
+```
+
 #### Docker 🐳
 The docker compose file will create and configure a Cassandra container to connect to the application. Feel free to modify any value.
 ```bash
