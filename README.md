@@ -1,5 +1,5 @@
 # NanoLink 🔗⚡
-NanoLink is a powerful URL management application built using Spring Boot 🍃, Cassandra, AWS, and Docker 🐳. This versatile tool allows users to create, store, and manage custom URL mappings efficiently. Think of it as a modern-day URL shortener with robust features.
+NanoLink is a powerful URL management application built using Spring Boot 🍃, Cassandra, AWS, and Docker 🐳. This versatile tool allows users to create, store, and manage custom URL mappings efficiently. Think of it as a modern-day URL shortener with robust features. 
 
 Key Features:
 
