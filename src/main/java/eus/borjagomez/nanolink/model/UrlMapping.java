@@ -1,42 +1,29 @@
 package eus.borjagomez.nanolink.model;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.sql.Timestamp;
 
-@Table("url_mappings")
+@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UrlMapping {
 
-    @PrimaryKey
-    @Column("mapping_id")
+    @Id
     private String mappingId;
-    @Column("long_url")
     private String longUrl;
-    @Column("short_url")
     private String shortUrl;
-    @Column("created_date")
-    private Timestamp createdDate;
-    @Column("updated_date")
-    private Timestamp updatedDate;
-    @Column("expiry_date")
-    private Timestamp expiryDate;
-    @Column("last_hit_date")
-    private Timestamp lastHitDate;
-    @Column("hit_count")
-    private int hitCount;
-    @Column("created_by")
+    @Temporal(TemporalType.TIMESTAMP) private Timestamp createdDate;
+    @Temporal(TemporalType.TIMESTAMP) private Timestamp updatedDate;
+    @Temporal(TemporalType.TIMESTAMP) private Timestamp expiryDate;
+    @Temporal(TemporalType.TIMESTAMP) private Timestamp lastHitDate;
+    private long hitCount;
     private String createdBy;
-    @Column("updated_by")
     private String updatedBy;
 
 }
