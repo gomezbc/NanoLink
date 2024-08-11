@@ -1,16 +1,19 @@
 version: '3.1'
 services:
-  cassandra-service:
-    image: cassandra:3.11
-    container_name: cassandra
+  postgres-db:
+    image: postgres:16.4
+    container_name: postgres
     networks:
       - nano-link-network
     environment:
-      CASSANDRA_KEYSPACE: nanoLink_keyspace
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
-      - "9042:9042"
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -23,25 +26,19 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      cassandra-service:
+      postgres-db:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
     environment:
-      SPRING_CASSANDRA_PORT: 9042
-      SPRING_CASSANDRA_KEYSPACE_NAME: nanolink_keyspace
-      SPRING_CASSANDRA_CONNECTION_CONNECT_TIMEOUT: 10s
-      SPRING_CASSANDRA_CONNECTION_INIT_QUERY_TIMEOUT: 10s
-      SPRING_CASSANDRA_USERNAME: cassandra
-      SPRING_CASSANDRA_PASSWORD: cassandra
-      SPRING_CASSANDRA_CONTACT-POINTS: cassandra
-      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-db:5432/postgres"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: mysecretpassword
 
 networks:
   nano-link-network:
     driver: bridge
 
 volumes:
-  cassandra_data:
+  postgres_data:
     driver: local
-
