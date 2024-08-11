@@ -19,7 +19,6 @@ public class UrlMappingMapper {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        urlMapping.setShortUrl(parsedUrl + "/" + createUrlMappingDto.getMappingId());
         urlMapping.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         Timestamp expiryDate = createUrlMappingDto.getExpiryDate();
         if (expiryDate != null) {

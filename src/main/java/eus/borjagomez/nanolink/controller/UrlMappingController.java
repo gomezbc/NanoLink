@@ -5,7 +5,6 @@ import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
 import eus.borjagomez.nanolink.dto.ResponseDto;
 import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
 import eus.borjagomez.nanolink.service.IUrlMappingService;
-import eus.borjagomez.nanolink.service.UrlMappingServiceCassandra;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ public class UrlMappingController {
 
     private final IUrlMappingService urlMappingService;
 
-    public UrlMappingController(UrlMappingServiceCassandra urlMappingService) {
+    public UrlMappingController(IUrlMappingService urlMappingService) {
         this.urlMappingService = urlMappingService;
     }
 

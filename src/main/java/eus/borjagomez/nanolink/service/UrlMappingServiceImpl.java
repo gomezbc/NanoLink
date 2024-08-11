@@ -14,11 +14,11 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
-public class UrlMappingServiceCassandra implements IUrlMappingService{
+public class UrlMappingServiceImpl implements IUrlMappingService{
 
     private final UrlMappingRepository urlMappingRepository;
 
-    public UrlMappingServiceCassandra(UrlMappingRepository urlMappingRepository) {
+    public UrlMappingServiceImpl(UrlMappingRepository urlMappingRepository) {
         this.urlMappingRepository = urlMappingRepository;
     }
 
@@ -29,7 +29,7 @@ public class UrlMappingServiceCassandra implements IUrlMappingService{
         if (optionalUrlMapping.isPresent()) {
             throw new UrlMappingAlreadyExistsException("Mapping already exists");
         }
-        urlMappingRepository.insert(urlMapping);
+        urlMappingRepository.save(urlMapping);
     }
 
     @Override

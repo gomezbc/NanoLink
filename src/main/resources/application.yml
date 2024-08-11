@@ -11,7 +11,13 @@ spring:
       client:
         health-indicator:
           enabled: false
-
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url:
+    username:
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 management:
   endpoints:
