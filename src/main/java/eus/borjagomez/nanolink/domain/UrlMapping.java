@@ -1,11 +1,9 @@
 package eus.borjagomez.nanolink.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.validator.constraints.URL;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -19,6 +17,7 @@ public class UrlMapping {
 
     @Id
     private String mappingId;
+    @URL(message = "Invalid URL")
     private String longUrl;
     @Temporal(TemporalType.TIMESTAMP) private Timestamp createdDate;
     @Temporal(TemporalType.TIMESTAMP) private Timestamp updatedDate;
