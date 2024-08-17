@@ -8,6 +8,7 @@ import eus.borjagomez.nanolink.exception.UrlMappingNotFoundException;
 import eus.borjagomez.nanolink.mapper.UrlMappingMapper;
 import eus.borjagomez.nanolink.domain.UrlMapping;
 import eus.borjagomez.nanolink.repository.UrlMappingRepository;
+import eus.borjagomez.nanolink.utils.UrlValidator;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -30,6 +31,9 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
         if (optionalUrlMapping.isPresent()) {
             throw new UrlMappingAlreadyExistsException(UrlMappingConstants.URL_MAPPING_ID_ALREADY_EXISTS_MSG);
         }
+        if (!UrlValidator.isValidURL(urlMapping.getLongUrl())) {
+            throw new IllegalArgumentException(UrlMappingConstants.MALFORMED_URL_EXCEPTION_MSG);
+        }
         urlMappingRepository.save(urlMapping);
     }
 
@@ -50,6 +54,9 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
             throw new UrlMappingNotFoundException(UrlMappingConstants.URL_MAPPING_NOT_FOUND_EXCEPTION_MSG);
+        }
+        if (!UrlValidator.isValidURL(updateUrlMappingRequest.getLongUrl())) {
+            throw new IllegalArgumentException(UrlMappingConstants.MALFORMED_URL_EXCEPTION_MSG);
         }
         UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(updateUrlMappingRequest, optionalUrlMapping.get());
         urlMappingRepository.save(urlMapping);
