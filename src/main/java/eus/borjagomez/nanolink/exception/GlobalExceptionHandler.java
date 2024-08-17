@@ -1,6 +1,6 @@
 package eus.borjagomez.nanolink.exception;
 
-import eus.borjagomez.nanolink.dto.ErrorResponseDto;
+import eus.borjagomez.nanolink.dto.ErrorResponse;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +47,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception,
-                                                                  WebRequest webRequest){
-        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+    public ResponseEntity<ErrorResponse> handleGlobalException(Exception exception,
+                                                               WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
                 webRequest.getDescription(false),
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 exception.getMessage(),
@@ -59,13 +59,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
-                .body(errorResponseDTO);
+                .body(errorResponse);
     }
 
     @ExceptionHandler(UrlMappingNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleUrlMappingNotFoundException(UrlMappingNotFoundException exception,
-                                                                          WebRequest webRequest){
-        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+    public ResponseEntity<ErrorResponse> handleUrlMappingNotFoundException(UrlMappingNotFoundException exception,
+                                                                           WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
                 webRequest.getDescription(false),
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
@@ -75,13 +75,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
-                .body(errorResponseDTO);
+                .body(errorResponse);
     }
 
     @ExceptionHandler(UrlMappingAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDto> handleUrlMappingAlreadyExistsException(UrlMappingAlreadyExistsException exception,
-                                                                              WebRequest webRequest){
-        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+    public ResponseEntity<ErrorResponse> handleUrlMappingAlreadyExistsException(UrlMappingAlreadyExistsException exception,
+                                                                                WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
                 webRequest.getDescription(false),
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
@@ -91,13 +91,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
-                .body(errorResponseDTO);
+                .body(errorResponse);
     }
 
     @ExceptionHandler(MalformedURLException.class)
-    public ResponseEntity<ErrorResponseDto> handleMalformedURLException(MalformedURLException exception,
-                                                                      WebRequest webRequest){
-        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+    public ResponseEntity<ErrorResponse> handleMalformedURLException(MalformedURLException exception,
+                                                                     WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
                 webRequest.getDescription(false),
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
@@ -107,6 +107,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
-                .body(errorResponseDTO);
+                .body(errorResponse);
     }
 }

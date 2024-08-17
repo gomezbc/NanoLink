@@ -1,4 +1,4 @@
-package eus.borjagomez.nanolink.model;
+package eus.borjagomez.nanolink.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

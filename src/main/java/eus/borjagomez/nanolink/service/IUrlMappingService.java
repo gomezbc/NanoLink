@@ -1,18 +1,18 @@
 package eus.borjagomez.nanolink.service;
 
-import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
-import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
-import eus.borjagomez.nanolink.model.UrlMapping;
+import eus.borjagomez.nanolink.dto.CreateUrlMappingRequest;
+import eus.borjagomez.nanolink.dto.UpdateUrlMappingRequest;
+import eus.borjagomez.nanolink.domain.UrlMapping;
 
 import java.net.URI;
 
 public interface IUrlMappingService {
 
-    void createUrlMapping(CreateUrlMappingDto createUrlMappingDto);
+    void createUrlMapping(CreateUrlMappingRequest createUrlMappingRequest);
 
     URI getLongUri(String mappingId);
 
-    void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto, String mappingId);
+    void updateUrlMapping(UpdateUrlMappingRequest updateUrlMappingRequest, String mappingId);
 
     void deleteUrlMapping(String mappingId);
 

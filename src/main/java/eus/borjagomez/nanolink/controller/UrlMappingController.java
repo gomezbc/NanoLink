@@ -1,12 +1,14 @@
 package eus.borjagomez.nanolink.controller;
 
+import eus.borjagomez.nanolink.constants.RestURI;
 import eus.borjagomez.nanolink.constants.UrlMappingConstants;
-import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
-import eus.borjagomez.nanolink.dto.ResponseDto;
-import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
+import eus.borjagomez.nanolink.dto.CreateUrlMappingRequest;
+import eus.borjagomez.nanolink.dto.OkResponse;
+import eus.borjagomez.nanolink.dto.UpdateUrlMappingRequest;
 import eus.borjagomez.nanolink.service.IUrlMappingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +21,15 @@ public class UrlMappingController {
         this.urlMappingService = urlMappingService;
     }
 
-    @PostMapping(value = "/api/shorten", consumes = "application/json", produces = {"application/json","application/problem+json"})
-    public ResponseEntity<ResponseDto> createUrlMapping(@Valid @RequestBody CreateUrlMappingDto createUrlMappingDto) {
-        urlMappingService.createUrlMapping(createUrlMappingDto);
+    @PostMapping(value = RestURI.CREATE_URL_MAPPING, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OkResponse> createUrlMapping(@Valid @RequestBody CreateUrlMappingRequest createUrlMappingRequest) {
+        urlMappingService.createUrlMapping(createUrlMappingRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ResponseDto(UrlMappingConstants.STATUS_201, UrlMappingConstants.MESSAGE_201));
+                .body(new OkResponse(UrlMappingConstants.STATUS_201, UrlMappingConstants.MESSAGE_201));
     }
 
-    @GetMapping(value = "/api/{mappingId}", produces = {"application/json","application/problem+json"})
+    @GetMapping(value = RestURI.GET_URL_MAPPING)
     public ResponseEntity<Object> redirectToLongUrl(@PathVariable String mappingId) {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
@@ -35,20 +37,20 @@ public class UrlMappingController {
                 .build();
     }
 
-    @PutMapping(value = "/api/{mappingId}", consumes = "application/json", produces = {"application/json","application/problem+json"})
-    public ResponseEntity<ResponseDto> updateUrlMapping(@Valid @RequestBody UpdateUrlMappingDto updateUrlMappingDto, @PathVariable String mappingId) {
-        urlMappingService.updateUrlMapping(updateUrlMappingDto, mappingId);
+    @PutMapping(value = RestURI.UPDATE_URL_MAPPING, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OkResponse> updateUrlMapping(@Valid @RequestBody UpdateUrlMappingRequest updateUrlMappingRequest, @PathVariable String mappingId) {
+        urlMappingService.updateUrlMapping(updateUrlMappingRequest, mappingId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseDto(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_UPDATE));
+                .body(new OkResponse(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_UPDATE));
     }
 
-    @DeleteMapping(value = "/api/{mappingId}", produces = {"application/json","application/problem+json"})
-    public ResponseEntity<ResponseDto> deleteUrlMapping(@PathVariable String mappingId) {
+    @DeleteMapping(value = RestURI.DELETE_URL_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OkResponse> deleteUrlMapping(@PathVariable String mappingId) {
         urlMappingService.deleteUrlMapping(mappingId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseDto(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_DELETE));
+                .body(new OkResponse(UrlMappingConstants.STATUS_200, UrlMappingConstants.MESSAGE_200_DELETE));
     }
 
 }

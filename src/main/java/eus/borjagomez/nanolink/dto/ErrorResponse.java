@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 @Data @AllArgsConstructor
-public class ErrorResponseDto {
+public class ErrorResponse {
     
     private String apiPath;
     private HttpStatus errorCode;

@@ -1,11 +1,11 @@
 package eus.borjagomez.nanolink.service;
 
-import eus.borjagomez.nanolink.dto.CreateUrlMappingDto;
-import eus.borjagomez.nanolink.dto.UpdateUrlMappingDto;
+import eus.borjagomez.nanolink.dto.CreateUrlMappingRequest;
+import eus.borjagomez.nanolink.dto.UpdateUrlMappingRequest;
 import eus.borjagomez.nanolink.exception.UrlMappingAlreadyExistsException;
 import eus.borjagomez.nanolink.exception.UrlMappingNotFoundException;
 import eus.borjagomez.nanolink.mapper.UrlMappingMapper;
-import eus.borjagomez.nanolink.model.UrlMapping;
+import eus.borjagomez.nanolink.domain.UrlMapping;
 import eus.borjagomez.nanolink.repository.UrlMappingRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +23,8 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
     }
 
     @Override
-    public void createUrlMapping(CreateUrlMappingDto createUrlMappingDto) {
-        UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(createUrlMappingDto, new UrlMapping());
+    public void createUrlMapping(CreateUrlMappingRequest createUrlMappingRequest) {
+        UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(createUrlMappingRequest, new UrlMapping());
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(urlMapping.getMappingId());
         if (optionalUrlMapping.isPresent()) {
             throw new UrlMappingAlreadyExistsException("Mapping already exists");
@@ -45,12 +45,12 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
     }
 
     @Override
-    public void updateUrlMapping(UpdateUrlMappingDto updateUrlMappingDto, String mappingId) {
+    public void updateUrlMapping(UpdateUrlMappingRequest updateUrlMappingRequest, String mappingId) {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
             throw new UrlMappingNotFoundException("Mapping doesn't exist");
         }
-        UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(updateUrlMappingDto, optionalUrlMapping.get());
+        UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(updateUrlMappingRequest, optionalUrlMapping.get());
         urlMappingRepository.save(urlMapping);
     }
 

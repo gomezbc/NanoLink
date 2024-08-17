@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUrlMappingDto {
+public class UpdateUrlMappingRequest {
 
     @Size(min = 1, max = 2048)
     private String longUrl;
