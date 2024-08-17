@@ -30,10 +30,12 @@ public class UrlMapping {
 
     @Override
     public final boolean equals(Object o) {
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
         if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> oEffectiveClass = ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass();
+        Class<?> thisEffectiveClass = ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         UrlMapping that = (UrlMapping) o;
         return getMappingId() != null && Objects.equals(getMappingId(), that.getMappingId());
@@ -41,6 +43,6 @@ public class UrlMapping {
 
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+        return ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode();
     }
 }

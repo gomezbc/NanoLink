@@ -1,5 +1,6 @@
 package eus.borjagomez.nanolink.service;
 
+import eus.borjagomez.nanolink.constants.UrlMappingConstants;
 import eus.borjagomez.nanolink.dto.CreateUrlMappingRequest;
 import eus.borjagomez.nanolink.dto.UpdateUrlMappingRequest;
 import eus.borjagomez.nanolink.exception.UrlMappingAlreadyExistsException;
@@ -27,7 +28,7 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
         UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(createUrlMappingRequest, new UrlMapping());
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(urlMapping.getMappingId());
         if (optionalUrlMapping.isPresent()) {
-            throw new UrlMappingAlreadyExistsException("Mapping already exists");
+            throw new UrlMappingAlreadyExistsException(UrlMappingConstants.URL_MAPPING_ID_ALREADY_EXISTS_MSG);
         }
         urlMappingRepository.save(urlMapping);
     }
@@ -36,7 +37,7 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
     public URI getLongUri(String mappingId) {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
-            throw new UrlMappingNotFoundException("Mapping doesn't exist");
+            throw new UrlMappingNotFoundException(UrlMappingConstants.URL_MAPPING_NOT_FOUND_EXCEPTION_MSG);
         }
         final UrlMapping urlMapping = optionalUrlMapping.get();
         updateHitCount(urlMapping);
@@ -48,7 +49,7 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
     public void updateUrlMapping(UpdateUrlMappingRequest updateUrlMappingRequest, String mappingId) {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
-            throw new UrlMappingNotFoundException("Mapping doesn't exist");
+            throw new UrlMappingNotFoundException(UrlMappingConstants.URL_MAPPING_NOT_FOUND_EXCEPTION_MSG);
         }
         UrlMapping urlMapping = UrlMappingMapper.mapToUrlMapping(updateUrlMappingRequest, optionalUrlMapping.get());
         urlMappingRepository.save(urlMapping);
@@ -58,7 +59,7 @@ public class UrlMappingServiceImpl implements IUrlMappingService{
     public void deleteUrlMapping(String mappingId) {
         Optional<UrlMapping> optionalUrlMapping = urlMappingRepository.findById(mappingId);
         if (optionalUrlMapping.isEmpty()) {
-            throw new UrlMappingNotFoundException("Mapping doesn't exist");
+            throw new UrlMappingNotFoundException(UrlMappingConstants.URL_MAPPING_NOT_FOUND_EXCEPTION_MSG);
         }
         urlMappingRepository.deleteById(mappingId);
     }

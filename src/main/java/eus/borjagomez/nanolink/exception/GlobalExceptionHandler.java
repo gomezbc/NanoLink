@@ -4,10 +4,7 @@ import eus.borjagomez.nanolink.dto.ErrorResponse;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -26,7 +23,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -34,15 +31,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> validationErrors = new HashMap<>();
         List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
-        validationErrorList.forEach((error) -> {
+        validationErrorList.forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String validationMsg = error.getDefaultMessage();
             validationErrors.put(fieldName, validationMsg);
         });
-        logger.info("Bad Request: " + request.getDescription(false) + ", message: " + ex.getMessage());
+        logger.info("Bad Request: {}, message: {}", request.getDescription(false), ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .body(validationErrors);
     }
 
@@ -55,10 +52,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.error("INTERNAL_SERVER_ERROR: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.error("INTERNAL_SERVER_ERROR: {}, message: {}", webRequest.getDescription(false), exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .body(errorResponse);
     }
 
@@ -71,10 +68,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.info("Bad Request: {}, message: {}", webRequest.getDescription(false), exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .body(errorResponse);
     }
 
@@ -87,10 +84,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.info("Bad Request: {}, message: {}", webRequest.getDescription(false), exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .body(errorResponse);
     }
 
@@ -103,10 +100,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        logger.info("Bad Request: " + webRequest.getDescription(false) + ", message: " + exception.getMessage());
+        logger.info("Bad Request: {}, message: {}", webRequest.getDescription(false), exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .header(HttpHeaders.CONTENT_TYPE, "application/problem+json")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .body(errorResponse);
     }
 }
