@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/gomezbc/NanoLink/compare/v0.1.0...v0.1.1) (2024-08-18)
+
+
+### Bug Fixes
+
+* release.outputs remove unnecessary text from outputs ([a91c999](https://github.com/gomezbc/NanoLink/commit/a91c999652f3e71da4a5c11d394c45ba086baaac))
+
 # [0.1.0](https://github.com/gomezbc/NanoLink/compare/v0.0.1...v0.1.0) (2024-08-18)
 
 
