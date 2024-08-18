@@ -74,7 +74,7 @@ jobs:
           RELEASE_VERSION: ${{ steps.semantic-release.outputs.next_release }}
         run: |
           echo "::notice::Uploading jar to GitHub release"
-          gh release upload "v$RELEASE_VERSION" ./nanoLink/target/nanoLink-${{ steps.semantic-release.outputs.next_release }}.jar
+          gh release upload "$RELEASE_VERSION" ./nanoLink/target/nanoLink-${{ steps.semantic-release.outputs.next_release }}.jar
 
   docker:
     name: Docker Release
