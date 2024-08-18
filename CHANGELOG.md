@@ -1,3 +1,10 @@
+## [0.2.1-develop.3](https://github.com/gomezbc/NanoLink/compare/v0.2.1-develop.2...v0.2.1-develop.3) (2024-08-18)
+
+
+### Bug Fixes
+
+* **release:** fix mkdir command ([76b2b86](https://github.com/gomezbc/NanoLink/commit/76b2b86cb3a7f85f6da5ddb5ca1c886f37fcdeb0))
+
 ## [0.2.1-develop.2](https://github.com/gomezbc/NanoLink/compare/v0.2.1-develop.1...v0.2.1-develop.2) (2024-08-18)
 
 
