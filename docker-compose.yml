@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - .nanoLink/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
       interval: 10s
@@ -19,7 +19,7 @@ services:
       retries: 10
 
   nanoLink:
-    image: gomezbc/nano-link:0.0.1-SNAPSHOT
+    image: gomezbc/nano-link:latest
     container_name: nanoLink
     networks:
       - nano-link-network
