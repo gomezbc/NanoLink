@@ -36,8 +36,6 @@ jobs:
       - name: Execute Maven build
         run: mvn -f nanoLink/pom.xml --batch-mode --update-snapshots verify
 
-      - run: ls -l -R .
-
       - name: Analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
