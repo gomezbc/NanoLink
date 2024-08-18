@@ -91,8 +91,8 @@ jobs:
           path: ./build/
 
       - run: |
-          - mkdir -p ./nanoLink/target/
-          - cp ./build/nanoLink-${{ needs.semantic_release.outputs.next_release }}.jar ./nanoLink/target/
+          mkdir -p ./nanoLink/target/
+          cp ./build/nanoLink-${{ needs.semantic_release.outputs.next_release }}.jar ./nanoLink/target/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
