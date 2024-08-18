@@ -1,3 +1,10 @@
+## [0.2.1-develop.4](https://github.com/gomezbc/NanoLink/compare/v0.2.1-develop.3...v0.2.1-develop.4) (2024-08-18)
+
+
+### Bug Fixes
+
+* **release:** remove '-' before command ([f88de06](https://github.com/gomezbc/NanoLink/commit/f88de064151843bd0cbf0cef42510b7451606ad1))
+
 ## [0.2.1-develop.3](https://github.com/gomezbc/NanoLink/compare/v0.2.1-develop.2...v0.2.1-develop.3) (2024-08-18)
 
 
