@@ -27,4 +27,6 @@ HEALTHCHECK --start-period=30s CMD curl --fail http://localhost:8080/actuator/he
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sh", "-c", "java -jar nanoLink-${APP_VERSION}.jar" ]
+ENV APP_VERSION=${APP_VERSION}
+
+ENTRYPOINT [ "sh", "-c", "java -jar nanoLink-$APP_VERSION.jar" ]
