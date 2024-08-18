@@ -1,3 +1,10 @@
+## [0.2.1-develop.2](https://github.com/gomezbc/NanoLink/compare/v0.2.1-develop.1...v0.2.1-develop.2) (2024-08-18)
+
+
+### Bug Fixes
+
+* **release:** fix env used in jar name ([bb7691a](https://github.com/gomezbc/NanoLink/commit/bb7691a151501d42f6ba13ad32c5bc79762f00fb))
+
 ## [0.2.1-develop.1](https://github.com/gomezbc/NanoLink/compare/v0.2.0...v0.2.1-develop.1) (2024-08-18)
 
 
