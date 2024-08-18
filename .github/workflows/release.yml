@@ -1,0 +1,144 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - '!v*.*.*-RC*'
+  workflow_dispatch:
+
+env:
+  IMAGE_NAMESPACE: 'gomezbc'
+  IMAGE_NAME: 'nano-link'
+
+jobs:
+  semantic_release:
+    name: Repository Release
+    runs-on: ubuntu-latest
+    permissions:
+      # see https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+      contents: write
+      pull-requests: write
+      packages: write
+    outputs:
+      next_release: ${{ steps.semantic-release.outputs.next_release }}
+      will_create_new_release: ${{ steps.semantic-release.outputs.will_create_new_release }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run semantic release
+        id: semantic-release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
+          GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
+        run: |
+          npx --yes -p @semantic-release/exec -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release
+
+      - name: Run semantic release (dry run)
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
+          GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
+        run: |
+          npx --yes -p @semantic-release/exec -p @semantic-release/github -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release --dry-run
+
+      - name: Execute Maven build
+        run: cd nanoLink && mvn --batch-mode --update-snapshots verify
+
+      - run: mkdir build && cp target/*.jar build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ./nanoLink/build
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Report semantic-release outputs
+        run: |
+          echo "::notice::${{ env.next_release }}"
+          echo "::notice::${{ env.will_create_new_release }}"
+
+      - name: Upload jar to GitHub release
+        if: github.event_name != 'pull_request' && steps.semantic-release.outputs.will_create_new_release == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.semantic-release.outputs.next_release }}
+        run: |
+          echo "::notice::Uploading jar to GitHub release"
+          gh release upload "v$RELEASE_VERSION" ./nanoLink/build/*.jar
+
+  docker:
+    name: Docker Release
+    needs: semantic_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: ./nanoLink/build
+
+      # Create SemVer or ref tags dependent of trigger event
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}
+          # Automatically prepare image tags; See action docs for more examples.
+          # semver patter will generate tags like these for example :1 :1.2 :1.2.3
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}},value=${{ needs.semantic_release.outputs.next_release }}
+            type=semver,pattern={{major}},value=${{ needs.semantic_release.outputs.next_release }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.semantic_release.outputs.next_release }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+
+      - name: DockerHub login
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          # Use existing DockerHub credentials present as secrets
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # https://github.com/peter-evans/dockerhub-description
+      # Important step to push image description to DockerHub
+      #- name: Update Docker Hub description
+        #if: github.event_name != 'pull_request'
+        #uses: peter-evans/dockerhub-description@v4
+        #with:
+          # readme-filepath defaults to toplevel README.md, Only necessary if you have a dedicated file with your 'Notice for docker images'
+          #readme-filepath: Docker-hub-notice.md
+          #username: ${{ secrets.DOCKER_HUB_USER }}
+          #password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          #repository: ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}
