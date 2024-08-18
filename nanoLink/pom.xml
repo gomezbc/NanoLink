@@ -10,7 +10,7 @@
     </parent>
     <groupId>eus.borjagomez</groupId>
     <artifactId>nanoLink</artifactId>
-    <version>latest</version>
+    <version>${revision}</version>
     <name>nanoLink</name>
     <description>nanoLink</description>
     <properties>

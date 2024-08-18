@@ -17,7 +17,9 @@ RUN apk --no-cache add curl
 
 USER appuser
 
-COPY LICENSE nanoLink/target/nanoLink-latest.jar /app/
+ARG APP_VERSION=latest
+
+COPY LICENSE nanoLink/target/nanoLink-${APP_VERSION}.jar /app/
 
 WORKDIR /app
 
@@ -25,4 +27,4 @@ HEALTHCHECK --start-period=30s CMD curl --fail http://localhost:8080/actuator/he
 
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar", "nanoLink-latest.jar" ]
+ENTRYPOINT [ "java", "-jar", "nanoLink-${APP_VERSION}.jar" ]

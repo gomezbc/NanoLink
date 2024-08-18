@@ -34,14 +34,14 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Execute Maven build
-        run: mvn -f nanoLink/pom.xml --batch-mode --update-snapshots verify
+        run: mvn -Drevision=latest -f nanoLink/pom.xml --batch-mode --update-snapshots verify
 
       - name: Analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -f nanoLink/pom.xml -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=gomezbc_nanolink
+          mvn -Drevision=latest -f nanoLink/pom.xml -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=gomezbc_nanolink
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
