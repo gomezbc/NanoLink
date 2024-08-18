@@ -59,15 +59,13 @@ jobs:
           npx --yes -p @semantic-release/exec -p @semantic-release/github -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release --dry-run
 
       - name: Execute Maven build
-        run: cd nanoLink && mvn --batch-mode --update-snapshots verify
-
-      - run: mkdir build && cp target/*.jar build
+        run: mvn -Drevision=${{ needs.semantic_release.outputs.next_release }} -f nanoLink/pom.xml --batch-mode --update-snapshots verify
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: ./nanoLink/build
+          path: ./nanoLink/target/nanoLink-${{ needs.semantic_release.outputs.next_release }}.jar
           if-no-files-found: error
           retention-days: 1
 
@@ -83,7 +81,7 @@ jobs:
           RELEASE_VERSION: ${{ steps.semantic-release.outputs.next_release }}
         run: |
           echo "::notice::Uploading jar to GitHub release"
-          gh release upload "v$RELEASE_VERSION" ./nanoLink/build/*.jar
+          gh release upload "v$RELEASE_VERSION" ./nanoLink/target/nanoLink-${{ needs.semantic_release.outputs.next_release }}.jar
 
   docker:
     name: Docker Release
@@ -92,11 +90,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: ./nanoLink/build
+          path: ./build/
+
+      - run: cp ./build/*.jar ./nanoLink/target
 
       # Create SemVer or ref tags dependent of trigger event
       - name: Docker meta
@@ -115,18 +116,21 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ needs.semantic_release.outputs.next_release }}
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
-      - name: DockerHub login
+      - name: Login to DockerHub
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           # Use existing DockerHub credentials present as secrets
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Push image
-        uses: docker/build-push-action@v5
+      - name: Build and push Docker image
+        uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755 # v6.6.1
         with:
           context: .
+          file: nanoLink/Dockerfile
+          build-args: APP_VERSION=${{ needs.semantic_release.outputs.next_release }}
+          platforms: linux/amd64, linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -1,0 +1,41 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "develop",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "echo next_release=${nextRelease.version} >> $GITHUB_OUTPUT"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "echo will_create_new_release=$([ ${lastRelease.version} = ${nextRelease.version} ] && echo false || echo true) >> $GITHUB_OUTPUT"
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ]
+}
