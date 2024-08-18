@@ -1,7 +1,7 @@
 name: Semantic Release
 
 on:
-  repository_dispatch
+  workflow_dispatch:
 
 env:
   IMAGE_NAMESPACE: 'gomezbc'
