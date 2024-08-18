@@ -1,3 +1,17 @@
+# [0.1.0](https://github.com/gomezbc/NanoLink/compare/v0.0.1...v0.1.0) (2024-08-18)
+
+
+### Bug Fixes
+
+* manual trigger of semantic release ([92c6492](https://github.com/gomezbc/NanoLink/commit/92c6492d3bdec69b80a0037a00e949c042560fed))
+* set correct env for next_release tag ([24a71d2](https://github.com/gomezbc/NanoLink/commit/24a71d26ca4ed19c269e2d37a01dcb9b6a75e4ad))
+* update release.yml to trigger on branches ([7f853eb](https://github.com/gomezbc/NanoLink/commit/7f853ebcb452a112a9ac34d11cb7502fc2dae428))
+
+
+### Features
+
+* set semantic release manually and fixed semantic-release outputs ([f0a3a00](https://github.com/gomezbc/NanoLink/commit/f0a3a00a256fe30ad0cedf40006dbf4db3398d20))
+
 # 1.0.0 (2024-08-18)
 
 
