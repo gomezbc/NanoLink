@@ -1,14 +1,7 @@
 name: Semantic Release
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-    branches:
-      - main
-      - develop
+  repository_dispatch
 
 env:
   IMAGE_NAMESPACE: 'gomezbc'
@@ -51,6 +44,8 @@ jobs:
           GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
         run: |
           npx --yes -p @semantic-release/exec -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release
+          echo next_release=$(cat .VERSION) >> $GITHUB_OUTPUT
+          echo will_create_new_release=$(cat .WILL_CREATE) >> $GITHUB_OUTPUT
 
       - name: Run semantic release (dry run)
         if: github.event_name == 'pull_request'
@@ -62,20 +57,15 @@ jobs:
           npx --yes -p @semantic-release/exec -p @semantic-release/github -p @semantic-release/changelog -p @semantic-release/git -p @semantic-release/commit-analyzer -p @semantic-release/release-notes-generator semantic-release --dry-run
 
       - name: Execute Maven build
-        run: mvn -Drevision=${{ env.next_release }} -f nanoLink/pom.xml --batch-mode --update-snapshots verify
+        run: mvn -Drevision=${{ steps.semantic-release.outputs.next_release }} -f nanoLink/pom.xml --batch-mode --update-snapshots verify
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: ./nanoLink/target/nanoLink-${{ env.next_release }}.jar
+          path: ./nanoLink/target/nanoLink-${{ steps.semantic-release.outputs.next_release }}.jar
           if-no-files-found: error
           retention-days: 1
-
-      - name: Report semantic-release outputs
-        run: |
-          echo "::notice::${{ env.next_release }}"
-          echo "::notice::${{ env.will_create_new_release }}"
 
       - name: Upload jar to GitHub release
         if: github.event_name != 'pull_request' && steps.semantic-release.outputs.will_create_new_release == 'true'
@@ -84,7 +74,7 @@ jobs:
           RELEASE_VERSION: ${{ steps.semantic-release.outputs.next_release }}
         run: |
           echo "::notice::Uploading jar to GitHub release"
-          gh release upload "v$RELEASE_VERSION" ./nanoLink/target/nanoLink-${{ env.next_release }}.jar
+          gh release upload "v$RELEASE_VERSION" ./nanoLink/target/nanoLink-${{ steps.semantic-release.outputs.next_release }}.jar
 
   docker:
     name: Docker Release

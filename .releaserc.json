@@ -11,13 +11,13 @@
     [
       "@semantic-release/exec",
       {
-        "verifyReleaseCmd": "echo next_release=${nextRelease.version} >> $GITHUB_OUTPUT"
+        "verifyReleaseCmd": "echo next_release=${nextRelease.version} >> .VERSION"
       }
     ],
     [
       "@semantic-release/exec",
       {
-        "verifyReleaseCmd": "echo will_create_new_release=$([ ${lastRelease.version} = ${nextRelease.version} ] && echo false || echo true) >> $GITHUB_OUTPUT"
+        "verifyReleaseCmd": "echo will_create_new_release=$([ ${lastRelease.version} = ${nextRelease.version} ] && echo false || echo true) >> .WILL_CREATE"
       }
     ],
     "@semantic-release/release-notes-generator",
