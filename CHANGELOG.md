@@ -1,3 +1,15 @@
+# [0.2.0](https://github.com/gomezbc/NanoLink/compare/v0.1.1...v0.2.0) (2024-08-18)
+
+
+### Bug Fixes
+
+* set v before version tag eg: v0.1.3 ([afd3146](https://github.com/gomezbc/NanoLink/commit/afd3146dfba82af61a50e1e99e6afff4510462d7))
+
+
+### Features
+
+* **docker-build:** set up buildx to enable multiplatform build ([46602df](https://github.com/gomezbc/NanoLink/commit/46602dfe81daaf7d15f8700a2e6962f7a2b7e6ac))
+
 ## [0.1.1](https://github.com/gomezbc/NanoLink/compare/v0.1.0...v0.1.1) (2024-08-18)
 
 
