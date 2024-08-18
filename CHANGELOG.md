@@ -5,6 +5,13 @@
 
 * **release:** ensure jar is successfully copied ([b0beadf](https://github.com/gomezbc/NanoLink/commit/b0beadf82db9997af85e5f0dd4002576e64ac059))
 
+## [0.2.1-develop.1](https://github.com/gomezbc/NanoLink/compare/v0.2.0...v0.2.1-develop.1) (2024-08-18)
+
+
+### Bug Fixes
+
+* **release:** ensure jar is successfully copied ([b0beadf](https://github.com/gomezbc/NanoLink/commit/b0beadf82db9997af85e5f0dd4002576e64ac059))
+
 # [0.2.0](https://github.com/gomezbc/NanoLink/compare/v0.1.1...v0.2.0) (2024-08-18)
 
 
