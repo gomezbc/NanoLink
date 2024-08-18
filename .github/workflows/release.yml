@@ -1,11 +1,14 @@
-name: release
+name: Semantic Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
-      - '!v*.*.*-RC*'
-  workflow_dispatch:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 env:
   IMAGE_NAMESPACE: 'gomezbc'
